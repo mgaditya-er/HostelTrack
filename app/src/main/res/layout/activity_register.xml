@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_register.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/primary"
+    tools:context=".Register">
+
+
+    <ImageView
+        android:id="@+id/imageViewHeader"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/hostellogo"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="16dp"/>
+    <EditText
+        android:id="@+id/editTextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:hint="Username"
+        android:maxLines="1"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_below="@id/imageViewHeader"
+
+        android:background="@drawable/round_dark_back_10"/>
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/editTextUsername"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Email"
+        android:background="@drawable/round_dark_back_10"
+        android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="match_parent"
+
+        android:layout_below="@id/editTextEmail"
+        android:hint="Phone Number"
+        android:layout_height="55dp"
+
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_dark_back_10"
+
+        android:inputType="phone"/>
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_below="@id/editTextPhone"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_dark_back_10"
+        android:hint="Password"
+        android:inputType="textPassword"/>
+
+
+    <Spinner
+        android:id="@+id/spinnerRole"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/editTextPassword"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_dark_back_10"
+        android:entries="@array/roles"
+        android:prompt="@string/choose_role"
+        style="SpinnerDropdownStyle"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/round_dark_back_20"
+        android:layout_below="@id/spinnerRole"
+        android:text="Register"
+
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account?" />
+
+        <TextView
+            android:id="@+id/signInBtn"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In"
+            android:textColor="#5B2018"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_register.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/primary"
+    tools:context=".LoginActivity">
+
+
+    <ImageView
+        android:id="@+id/imageViewHeader"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/hostellogo"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/editTextUsername"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Email"
+        android:background="@drawable/round_dark_back_10"
+        android:inputType="textEmailAddress"/>
+
+
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="match_parent"
+        android:layout_below="@id/editTextPhone"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_dark_back_10"
+        android:hint="Password"
+        android:inputType="textPassword"/>
+
+
+    <Spinner
+        android:id="@+id/spinnerRole"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/editTextPassword"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_dark_back_10"
+        android:entries="@array/roles"
+        android:prompt="@string/choose_role"
+        style="SpinnerDropdownStyle"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnlogin"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/round_dark_back_20"
+        android:layout_below="@id/spinnerRole"
+        android:text="Log In"
+
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account?" />
+
+        <TextView
+            android:id="@+id/signUpBtn"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textColor="#5B2018"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</LinearLayout>

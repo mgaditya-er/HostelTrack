@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/arrays.xml -->
+<resources>
+
+    <style name="SpinnerDropdownStyle" >
+        <item name="android:background">#EDECD8</item>
+    </style>
+    <string-array name="roles">
+        <item>Admin</item>
+        <item>Student</item>
+    </string-array>
+</resources>

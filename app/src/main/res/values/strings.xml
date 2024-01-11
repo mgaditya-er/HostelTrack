@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HostelTrack</string>
+    <string name="choose_role">Role</string>
 </resources>
