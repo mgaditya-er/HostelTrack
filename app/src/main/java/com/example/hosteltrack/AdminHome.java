@@ -7,17 +7,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AdminHome extends AppCompatActivity {
 
     private TextView tvCode;
+    private FirebaseFirestore db;
 
     private Button btnSignOut;
 
@@ -25,6 +30,7 @@ public class AdminHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
+        db = FirebaseFirestore.getInstance();
 
         btnSignOut = findViewById(R.id.btnSignOut);
         Button btnHome = findViewById(R.id.btnHome);
@@ -33,11 +39,25 @@ public class AdminHome extends AppCompatActivity {
         tvCode = findViewById(R.id.tvCode);
         Button btnShareCode = findViewById(R.id.btnShareCode);
 
+
+
+
+
+        boolean hasDateChanged = DateUtils.hasDateChanged(this);
+
+        if (hasDateChanged) {
+            // Call createData() or perform any other actions needed on date change
+            createData();
+
+            // Save the current date
+            DateUtils.saveCurrentDate(this);
+        }
+
         updateCode();
         TextView tvDate = findViewById(R.id.tvDate);
 
         // Get today's date in the specified format
-        String currentDate = getCurrentDate("dd-MM-yyyy");
+        String currentDate = getCurrentDate("ddMMyyyy");
 
         // Set the date to the TextView
         tvDate.setText("Date: " + currentDate);
@@ -71,6 +91,54 @@ public class AdminHome extends AppCompatActivity {
 
         // Update the TextView with the new code
         tvCode.setText(newCode);
+        storeData(newCode);
+    }
+
+
+    private void createData()
+    {
+        String currentDate = getCurrentDate("ddMMyyyy");
+
+        int Code = 123456;
+        // Create a collection with today's date as the name
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", Code);
+//        data.put("presentStudents", /* Add your list of present students here */);
+
+        db.collection("attendance")  // Collection named "attendance"
+                .document(currentDate)  // Document named with today's date
+                .set(data)
+                .addOnSuccessListener(documentReference -> {
+                    // Data successfully stored
+                    // You can add any additional logic here
+                    Toast.makeText(this, "created"+data, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle errors
+                });
+    }
+    private void storeData(String code) {
+        // Get today's date
+//        String currentDate = getCurrentDate();
+        String currentDate = getCurrentDate("ddMMyyyy");
+
+
+        // Create a collection with today's date as the name
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", code);
+//        data.put("presentStudents", /* Add your list of present students here */);
+
+        db.collection("attendance")  // Collection named "attendance"
+                .document(currentDate)  // Document named with today's date
+                .update(data)
+                .addOnSuccessListener(documentReference -> {
+                    // Data successfully stored
+                    // You can add any additional logic here
+                    Toast.makeText(this, "created"+data, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle errors
+                });
     }
     private String generateRandomCode() {
         Random random = new Random();
