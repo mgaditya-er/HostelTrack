@@ -12,23 +12,14 @@
         android:id="@+id/tvHostelApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hostel Attendance App"
+        android:text="Admin"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:textSize="16dp"
         android:textStyle="bold"
         android:textColor="@color/secondary"/>
 
-    <TextView
-        android:id="@+id/tvAdminHomePage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Admin Home Page"
-        android:layout_below="@+id/tvHostelApp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:textSize="20dp"
-        android:textColor="@color/secondary"/>
+
 
     <Button
         android:id="@+id/btnSignOut"
@@ -43,4 +34,104 @@
         android:textColor="@color/white"
         android:padding="12dp"
         android:textStyle="bold"/>
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <!-- TextView for displaying the date -->
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Date: dd-MM-yyyy"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/secondary"/>
+
+        <!-- EditText for entering 6-digit code -->
+        <TextView
+            android:id="@+id/tvCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDate"
+            android:layout_marginTop="16dp"
+            android:text="123456"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/secondary"/>
+
+        <!-- Button for marking attendance -->
+        <Button
+            android:id="@+id/changecode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvCode"
+            android:layout_marginTop="16dp"
+            android:text="Change Code"
+            android:textSize="20sp"
+            android:background="@drawable/round_dark_back_10"
+            android:textColor="@color/white"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <!-- Button for sharing code -->
+        <Button
+            android:id="@+id/btnShareCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/changecode"
+            android:layout_marginTop="16dp"
+            android:text="Share Code"
+            android:textSize="20sp"
+            android:background="@drawable/round_dark_back_10"
+            android:textColor="@color/white"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@drawable/round_dark_back_10"
+        >
+
+        <Button
+            android:id="@+id/btnHome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home"
+            android:textColor="@color/secondary"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
+            android:textSize="20dp"
+
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btnReport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Report"
+            android:textColor="@color/secondary"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
 </RelativeLayout>
