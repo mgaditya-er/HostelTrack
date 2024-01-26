@@ -17,7 +17,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class AdminHome extends AppCompatActivity {
 
@@ -54,10 +57,16 @@ public class AdminHome extends AppCompatActivity {
         }
 
         updateCode();
+
         TextView tvDate = findViewById(R.id.tvDate);
 
         // Get today's date in the specified format
         String currentDate = getCurrentDate("ddMMyyyy");
+
+        String currdate = getCurrentDate("ddMMyyyy");
+
+
+        markAllStudentsAbsent(currdate);
 
         // Set the date to the TextView
         tvDate.setText("Date: " + currentDate);
@@ -92,6 +101,7 @@ public class AdminHome extends AppCompatActivity {
         // Update the TextView with the new code
         tvCode.setText(newCode);
         storeData(newCode);
+
     }
 
 
@@ -116,7 +126,45 @@ public class AdminHome extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     // Handle errors
                 });
+
+        markAllStudentsAbsent(currentDate);
+
+
     }
+
+    private void markAllStudentsAbsent(String currentDate) {
+
+        CollectionReference studentsCollection = db.collection("students");
+
+        // Reference to the "absent" subcollection for the current date
+        CollectionReference absentCollection = db.collection("attendance")
+                .document(currentDate)
+                .collection("absent");
+
+        // Fetch all documents from the "students" collection
+        studentsCollection.get()
+                .addOnSuccessListener(querySnapshot -> {
+                    // Iterate through each document and mark the student as absent
+                    for (QueryDocumentSnapshot document : querySnapshot) {
+                        String studentUID = document.getId();
+
+                        // Add the student's UUID to the "absent" subcollection
+                        absentCollection.document(studentUID)
+                                .set(new HashMap<>())
+                                .addOnSuccessListener(aVoid ->
+                                        // Document successfully created/updated
+                                        Toast.makeText(AdminHome.this, "All students marked absent", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e ->
+                                        // Handle errors
+                                        Toast.makeText(AdminHome.this, "Error marking students absent", Toast.LENGTH_SHORT).show());
+                    }
+                })
+                .addOnFailureListener(e ->
+                        // Handle errors
+                        Toast.makeText(AdminHome.this, "Error fetching students", Toast.LENGTH_SHORT).show());
+
+    }
+
     private void storeData(String code) {
         // Get today's date
 //        String currentDate = getCurrentDate();
@@ -156,7 +204,7 @@ public class AdminHome extends AppCompatActivity {
         // Create an Intent to share the code
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out Attendance code: " + codeToShare+"And Mark Your Attendance");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out Attendance code: " + codeToShare+" And Mark Your Attendance");
 
         // Start the activity to show the sharing options
         startActivity(Intent.createChooser(shareIntent, "Share Code"));
