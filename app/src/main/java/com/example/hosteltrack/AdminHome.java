@@ -1,8 +1,12 @@
 package com.example.hosteltrack;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,29 +25,65 @@ import java.util.Random;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class AdminHome extends AppCompatActivity {
 
-    private TextView tvCode;
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
+    private TextView tvCode;
 
     private Button btnSignOut;
+    private Button btnpresent,btnabsent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         btnSignOut = findViewById(R.id.btnSignOut);
         Button btnHome = findViewById(R.id.btnHome);
-        Button btnReport = findViewById(R.id.btnReport);
         Button btnChangeCode = findViewById(R.id.changecode);
         tvCode = findViewById(R.id.tvCode);
         Button btnShareCode = findViewById(R.id.btnShareCode);
+        btnpresent = findViewById(R.id.btnpresent);
+        btnabsent = findViewById(R.id.btnabsent);
+        btnpresent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent presentIntent = new Intent(AdminHome.this,Present.class);
+                startActivity(presentIntent);
+            }
+        });
+        btnabsent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent presentIntent = new Intent(AdminHome.this,Absent.class);
+                startActivity(presentIntent);
+            }
+        });
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
+        Button setLocationButton = findViewById(R.id.btnSetLocation);
+        setLocationButton.setOnClickListener(view -> setAdminLocation());
+        setLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call a function to set the admin's location
+                Toast.makeText(AdminHome.this, "Set Location", Toast.LENGTH_SHORT).show();
+//                setAdminLocation();
+                double adminLatitude = 18.451817; // Admin's latitude
+                double adminLongitude = 73.8502939; // Admin's longitude
+                saveLocationToFirestore(adminLatitude, adminLongitude);
+            }
+        });
 
 
         boolean hasDateChanged = DateUtils.hasDateChanged(this);
@@ -54,6 +94,8 @@ public class AdminHome extends AppCompatActivity {
 
             // Save the current date
             DateUtils.saveCurrentDate(this);
+            String currentDate = getCurrentDate("ddMMyyyy");
+            markAllStudentsAbsent(currentDate);
         }
 
         updateCode();
@@ -66,7 +108,7 @@ public class AdminHome extends AppCompatActivity {
         String currdate = getCurrentDate("ddMMyyyy");
 
 
-        markAllStudentsAbsent(currdate);
+//        markAllStudentsAbsent(currdate);
 
         // Set the date to the TextView
         tvDate.setText("Date: " + currentDate);
@@ -93,6 +135,77 @@ public class AdminHome extends AppCompatActivity {
                 signOut();
             }
         });
+    }
+
+    private void setAdminLocation() {
+
+
+        // Replace these values with the desired location
+//        double adminLatitude = 18.451817; // Admin's latitude
+//        double adminLongitude = 73.8502939; // Admin's longitude
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            Location adminLocation = task.getResult();
+
+                            // Save the admin's location to Firestore
+//                            saveLocationToFirestore(adminLocation.getLatitude(), adminLocation.getLongitude());
+                                    double adminLatitude = 18.451817; // Admin's latitude
+                                    double adminLongitude = 73.8502939; // Admin's longitude
+                                    saveLocationToFirestore(adminLatitude, adminLongitude);
+
+                        } else {
+
+
+                            Toast.makeText(AdminHome.this, "Error getting admin location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+
+
+
+
+        // Save the admin location in Firestore or perform any other necessary action
+//        saveLocationToFirestore(adminLatitude, adminLongitude);
+
+        Toast.makeText(AdminHome.this, "Admin location set successfully", Toast.LENGTH_SHORT).show();
+    }
+    private void saveLocationToFirestore(double latitude, double longitude) {
+        // Save the admin location to Firestore or any other backend
+        // You can use FirebaseFirestore.getInstance().collection("admin").document("location").set(...) for example
+
+        String currentDate = getCurrentDate("ddMMyyyy");
+        Map<String, Object> locationData = new HashMap<>();
+        locationData.put("latitude", latitude);
+        locationData.put("longitude", longitude);
+        db.collection("attendance")
+                .document(currentDate)
+                .collection("hostellocation")
+                .document("location")
+                .set(locationData)
+                .addOnSuccessListener(documentReference -> {
+                    // Location data successfully stored
+                    Toast.makeText(AdminHome.this, "Admin location set successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle errors
+                    Toast.makeText(AdminHome.this, "Error setting admin location", Toast.LENGTH_SHORT).show();
+                });
     }
     private void updateCode() {
         // Generate a random 6-digit code
@@ -127,7 +240,7 @@ public class AdminHome extends AppCompatActivity {
                     // Handle errors
                 });
 
-        markAllStudentsAbsent(currentDate);
+
 
 
     }
@@ -147,10 +260,11 @@ public class AdminHome extends AppCompatActivity {
                     // Iterate through each document and mark the student as absent
                     for (QueryDocumentSnapshot document : querySnapshot) {
                         String studentUID = document.getId();
-
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("present", 0);
                         // Add the student's UUID to the "absent" subcollection
                         absentCollection.document(studentUID)
-                                .set(new HashMap<>())
+                                .set(data)
                                 .addOnSuccessListener(aVoid ->
                                         // Document successfully created/updated
                                         Toast.makeText(AdminHome.this, "All students marked absent", Toast.LENGTH_SHORT).show())

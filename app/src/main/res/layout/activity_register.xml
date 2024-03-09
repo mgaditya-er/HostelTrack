@@ -13,11 +13,19 @@
 
     <ImageView
         android:id="@+id/imageViewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/hostellogo"
+        android:layout_width="320dp"
+        android:layout_height="180dp"
+        android:src="@drawable/hostellogo1"
         android:scaleType="centerCrop"
         android:layout_marginBottom="16dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="शासकीय निवासी महिला तंत्रनिकेतन"
+        android:textSize="24sp"
+        android:textColor="@color/secondary"
+        android:gravity="center"
+        android:textStyle="bold"/>
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
@@ -122,7 +130,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"

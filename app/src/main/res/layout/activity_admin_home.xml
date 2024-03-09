@@ -34,6 +34,18 @@
         android:textColor="@color/white"
         android:padding="12dp"
         android:textStyle="bold"/>
+    <Button
+        android:id="@+id/btnSetLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Location"
+        android:layout_below="@id/btnSignOut"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/round_dark_back_10"
+        android:textColor="@color/white"
+        android:padding="12dp"
+        android:textStyle="bold"/>
 
     <RelativeLayout
         android:layout_width="300dp"
@@ -116,15 +128,26 @@
             android:background="@android:color/transparent"
             android:padding="16dp"
             android:textSize="20dp"
-
             android:gravity="center"/>
 
         <Button
-            android:id="@+id/btnReport"
+            android:id="@+id/btnpresent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Report"
+            android:text="Present"
+            android:textColor="@color/secondary"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btnabsent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Absent"
             android:textColor="@color/secondary"
             android:textStyle="bold"
             android:background="@android:color/transparent"
