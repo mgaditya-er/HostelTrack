@@ -78,9 +78,11 @@ public class AdminHome extends AppCompatActivity {
             public void onClick(View v) {
                 // Call a function to set the admin's location
                 Toast.makeText(AdminHome.this, "Set Location", Toast.LENGTH_SHORT).show();
-//                setAdminLocation();
-                double adminLatitude = 18.451817; // Admin's latitude
-                double adminLongitude = 73.8502939; // Admin's longitude
+                setAdminLocation();
+                double adminLatitude = 18.452659004322047; // Admin's latitude
+                double adminLongitude = 73.85051395174985; // Admin's longitude
+//                18.452659004322047, 73.85051395174985
+//                17.02871867578921, 74.62093129501355
                 saveLocationToFirestore(adminLatitude, adminLongitude);
             }
         });

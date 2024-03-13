@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,7 +32,10 @@ import java.text.SimpleDateFormat;
 
 public class StudentHome extends AppCompatActivity {
     private Button btnSignOut;
+    private static final String TAG = "StudentHome";
+
     private FirebaseFirestore db;
+    EditText etCode;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
@@ -40,7 +46,7 @@ public class StudentHome extends AppCompatActivity {
 
         Button btnHome = findViewById(R.id.btnHome);
         Button btnReport = findViewById(R.id.btnReport);
-        EditText etCode = findViewById(R.id.etCode);
+        etCode = findViewById(R.id.etCode);
         Button btnMarkAttendance = findViewById(R.id.btnMarkAttendance);
         db = FirebaseFirestore.getInstance();
         btnSignOut = findViewById(R.id.btnSignOut);
@@ -66,7 +72,7 @@ public class StudentHome extends AppCompatActivity {
                 if (!attendanceCode.isEmpty()) {
                     String currdate = getCurrentDate("ddMMyyyy");
                     checkLocationAndMarkAttendance();
-                    checkAttendanceCode(attendanceCode, currdate);
+//                    checkAttendanceCode(attendanceCode, currdate);
                     // Show a Toast with the attendance code
                     Toast.makeText(StudentHome.this, "Attendance Code: " + attendanceCode, Toast.LENGTH_SHORT).show();
                 } else {
@@ -117,21 +123,20 @@ public class StudentHome extends AppCompatActivity {
 
     private void checkLocationAndMarkAttendance () {
         // Replace these values with the admin's set location
-        double adminLatitude = 18.451817; // Admin's latitude
-        double adminLongitude = 73.8502939; // Admin's longitude
+//        double adminLatitude = 17.04625024791985; // Admin's latitude
+//        double adminLongitude = 74.61982065468233; // Admin's longitude
+        double adminLatitude = 18.452907138112447; // Admin's latitude
+        double adminLongitude = 73.85052345448871; // Admin's longitude
+
 
         // Set the radius within which the student can mark attendance
-        double radius = 100.0; // in meters
-
+        double radius = 1000.0; // in meters
+        Toast.makeText(this, "Checking loaction", Toast.LENGTH_SHORT).show();
         // Check the student's location
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         fusedLocationProviderClient.getLastLocation()
@@ -142,7 +147,12 @@ public class StudentHome extends AppCompatActivity {
                         if (isLocationWithinRadius(studentLocation, adminLatitude, adminLongitude, radius)) {
                             // Student is within the radius, allow attendance marking
                             Toast.makeText(this, " same location", Toast.LENGTH_SHORT).show();
-                            markAttendance();
+
+                            String attendanceCode = etCode.getText().toString().trim();
+                            String currdate = getCurrentDate("ddMMyyyy");
+                            checkAttendanceCode(attendanceCode, currdate);
+//                            markAttendance();
+
                         } else {
                             // Student is outside the radius, show a message
                             Toast.makeText(StudentHome.this, "You are not near the admin's location", Toast.LENGTH_SHORT).show();
@@ -198,20 +208,21 @@ public class StudentHome extends AppCompatActivity {
                                                     .set(new HashMap<String, Object>())
                                                     .addOnSuccessListener(aVoid -> {
                                                         // Document successfully created/updated
-                                                        // Remove the UUID from the "absent" collection
-                                                        db.collection("attendence")
-                                                        .document(currentDate)
-                                                        .collection("absent")
-                                                        .document(currentUserUID)
-                                                        .delete()
-                                                        .addOnSuccessListener(deleteSuccess -> {
-                                                    // Document successfully deleted
-                                                            Toast.makeText(StudentHome.this, "User removed from absent list", Toast.LENGTH_SHORT).show();
-                                                        })
-                                                        .addOnFailureListener(e -> {
-                                                            // Handle errors
-                                                            Toast.makeText(StudentHome.this, "Error removing user from absent list", Toast.LENGTH_SHORT).show();
-                                                        });
+                                                        // Query documents where "present" is 0
+
+// Reference to the specific attendance document for the current student
+                                                        DocumentReference studentAttendanceRef = db.collection("attendance")
+                                                                .document(currentDate)
+                                                                .collection("absent") // Assuming you're updating within the "absent" collection based on your example
+                                                                .document(currentUserUID);
+
+// Update the "present" field for the current student to 1
+                                                        studentAttendanceRef.update("present", 1)
+                                                                .addOnSuccessListener(aVoid1 -> Log.d(TAG, "Attendance updated to present for student UUID: " + currentUserUID))
+                                                                .addOnFailureListener(e -> Log.w(TAG, "Error updating attendance for student UUID: " + currentUserUID, e));
+
+// Reference to the "absent" collection for the current date, but adjust according to your actual structure
+
                                                         Toast.makeText(StudentHome.this, "Attendance recorded for user", Toast.LENGTH_SHORT).show();
                                                     })
                                                     .addOnFailureListener(e -> {
