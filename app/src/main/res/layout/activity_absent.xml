@@ -9,27 +9,68 @@
 
     <!-- TextView to display absent student list -->
     <TextView
-        android:id="@+id/tvAbsentStudents"
+        android:id="@+id/tvHostelName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Absent Students:"
+        android:text="शासकीय निवासी महिला तंत्रनिकेतन"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="16dp"
+        android:textColor="@color/secondary"
         android:textStyle="bold"
         android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/tvDayDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day, Date"
+        app:layout_constraintTop_toBottomOf="@id/tvHostelName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/secondary" />
+
+
+    <TextView
+        android:id="@+id/tvAbsentStudents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Absent Students:"
+        app:layout_constraintTop_toBottomOf="@id/tvDayDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
 
     <!-- RecyclerView to display absent students -->
+    <TextView
+        android:id="@+id/tvAbsentCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50"
+        app:layout_constraintTop_toTopOf="@id/tvAbsentStudents"
+        app:layout_constraintStart_toEndOf="@id/tvAbsentStudents"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:textSize="18sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAbsent"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingLeft="20dp"
+
         android:layout_below="@id/tvAbsentStudents"
-        app:layout_constraintTop_toBottomOf="@id/tvAbsentStudents"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tvAbsentStudents"
+        android:layout_marginBottom="80dp"/>
     <!-- Add more UI elements as needed -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"

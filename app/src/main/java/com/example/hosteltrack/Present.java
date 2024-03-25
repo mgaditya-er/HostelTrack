@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +29,7 @@ public class Present extends AppCompatActivity {
     private StudentAdapter adapter;
     private List<Student> presentStudentsList;
 
+    private TextView tvPresentCount;
     private FirebaseFirestore db;
 
     @Override
@@ -40,11 +44,27 @@ public class Present extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewPresent);
         presentStudentsList = new ArrayList<>();
         adapter = new StudentAdapter(presentStudentsList);
+        TextView tvDayDate = findViewById(R.id.tvDayDate);
 
         // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        tvPresentCount = findViewById(R.id.tvPresentCount);
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMMM yyyy", Locale.getDefault());
+        String dayDate = dateFormat.format(calendar.getTime());
+// Set the text to the TextView
+        tvDayDate.setText(dayDate);
+        // Update the count whenever the adapter's data changes
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                updatePresentCount();
+            }
+        });
         // Fetch UUIDs of present students from Firestore
         // Reference to the "present" subcollection for the current date
         String currentDate = getCurrentDate("ddMMyyyy");
@@ -71,6 +91,11 @@ public class Present extends AppCompatActivity {
                 });
     }
 
+    private void updatePresentCount() {
+        int count = presentStudentsList.size();
+        tvPresentCount.setText("Count " + count);
+    }
+
     private void fetchPresentStudentsDetails(List<String> presentStudentUUIDs) {
         for (String uuid : presentStudentUUIDs) {
             db.collection("students")
@@ -81,9 +106,10 @@ public class Present extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 String name = document.getString("username");
+                                String number = document.getString("phone");
                                 if (name != null) {
                                     // Create a Student object and add it to the list
-                                    presentStudentsList.add(new Student(uuid, name));
+                                    presentStudentsList.add(new Student(uuid, name,number));
                                     adapter.notifyDataSetChanged();
                                 }
                             } else {

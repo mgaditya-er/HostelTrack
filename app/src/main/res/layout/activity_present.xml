@@ -6,18 +6,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Present">
+    <TextView
+        android:id="@+id/tvHostelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="शासकीय निवासी महिला तंत्रनिकेतन"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:textColor="@color/secondary"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/tvDayDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Day, Date"
+        app:layout_constraintTop_toBottomOf="@id/tvHostelName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/secondary" />
+
 
     <TextView
         android:id="@+id/tvPresentStudents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Present Students:"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDayDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="16dp"
         android:textStyle="bold"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+/>
+    <TextView
+        android:id="@+id/tvPresentCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50"
+        app:layout_constraintTop_toTopOf="@id/tvPresentStudents"
+        app:layout_constraintStart_toEndOf="@id/tvPresentStudents"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:textSize="18sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPresent"

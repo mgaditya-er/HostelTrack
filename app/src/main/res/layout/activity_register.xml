@@ -14,7 +14,7 @@
     <ImageView
         android:id="@+id/imageViewHeader"
         android:layout_width="320dp"
-        android:layout_height="180dp"
+        android:layout_height="100dp"
         android:src="@drawable/hostellogo1"
         android:scaleType="centerCrop"
         android:layout_marginBottom="16dp"/>
@@ -51,6 +51,7 @@
         android:textSize="16sp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        android:maxLength="40"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:hint="Email"
@@ -58,13 +59,11 @@
         android:inputType="textEmailAddress"/>
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/Enrollnumber"
         android:layout_width="match_parent"
-
         android:layout_below="@id/editTextEmail"
-        android:hint="Phone Number"
+        android:hint="Enrollment No: 2112280133 "
         android:layout_height="55dp"
-
         android:layout_marginTop="15dp"
         android:textSize="16sp"
         android:paddingStart="20dp"
@@ -72,7 +71,20 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/round_dark_back_10"
-
+        android:inputType="number"/>
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="match_parent"
+        android:layout_below="@id/Enrollnumber"
+        android:hint="Phone Number(10 digit only)"
+        android:layout_height="55dp"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_dark_back_10"
         android:inputType="phone"/>
 
     <EditText

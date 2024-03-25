@@ -47,10 +47,13 @@
         android:padding="12dp"
         android:textStyle="bold"/>
 
+
     <RelativeLayout
+        android:id="@+id/codedetail"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_marginTop="160dp"
+        android:layout_centerHorizontal="true">
 
         <!-- TextView for displaying the date -->
         <TextView
@@ -106,7 +109,68 @@
             android:padding="12dp"
             android:textStyle="bold"
             android:gravity="center"/>
+
+
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/timeLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/codedetail"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/tvStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Start Time: Not Set"
+            android:textColor="@color/secondary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSetStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvStartTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/round_dark_back_10"
+            android:onClick="setStartTime"
+            android:padding="12dp"
+            android:text="Set Start Time"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnSetStartTime"
+            android:layout_marginTop="16dp"
+            android:text="End Time: Not Set"
+            android:textColor="@color/secondary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSetEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvEndTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/round_dark_back_10"
+            android:onClick="setEndTime"
+            android:padding="12dp"
+            android:text="Set End Time"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
 
     <LinearLayout
         android:id="@+id/bottomMenu"

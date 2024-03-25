@@ -6,6 +6,7 @@ import com.google.android.gms.location.LocationServices;
 import android.content.pm.PackageManager;
 import android.location.Location;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -18,17 +19,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 
 public class StudentHome extends AppCompatActivity {
     private Button btnSignOut;
@@ -36,6 +41,8 @@ public class StudentHome extends AppCompatActivity {
 
     private FirebaseFirestore db;
     EditText etCode;
+    public static int flag=0;
+    Button btnMarkAttendance;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
@@ -47,10 +54,11 @@ public class StudentHome extends AppCompatActivity {
         Button btnHome = findViewById(R.id.btnHome);
         Button btnReport = findViewById(R.id.btnReport);
         etCode = findViewById(R.id.etCode);
-        Button btnMarkAttendance = findViewById(R.id.btnMarkAttendance);
+        btnMarkAttendance = findViewById(R.id.btnMarkAttendance);
         db = FirebaseFirestore.getInstance();
         btnSignOut = findViewById(R.id.btnSignOut);
-
+        btnMarkAttendance.setEnabled(true);
+        btnMarkAttendance.setVisibility(View.VISIBLE);
         TextView tvDate = findViewById(R.id.tvDate);
 
         // Get today's date in the specified format
@@ -60,27 +68,15 @@ public class StudentHome extends AppCompatActivity {
         tvDate.setText("Date: " + currentDate);
 
 
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        btnMarkAttendance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get the code entered in the EditText
-                String attendanceCode = etCode.getText().toString().trim();
+        timeisvalid();
 
-                // Check if the code is not empty
-                if (!attendanceCode.isEmpty()) {
-                    String currdate = getCurrentDate("ddMMyyyy");
-                    checkLocationAndMarkAttendance();
-//                    checkAttendanceCode(attendanceCode, currdate);
-                    // Show a Toast with the attendance code
-                    Toast.makeText(StudentHome.this, "Attendance Code: " + attendanceCode, Toast.LENGTH_SHORT).show();
-                } else {
-                    // Show a Toast if the code is empty
-                    Toast.makeText(StudentHome.this, "Please enter the attendance code", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
+
+
+
 
 
         btnHome.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +116,71 @@ public class StudentHome extends AppCompatActivity {
         });
     }
 
+    private void timeisvalid() {
+        String currentDate = getCurrentDate("ddMMyyyy");
+        db.collection("attendance")
+                .document(currentDate)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        boolean isValid = false;
+                        if (documentSnapshot.exists()) {
+                            String startTime = documentSnapshot.getString("start_time");
+                            String endTime = documentSnapshot.getString("end_time");
+                            Toast.makeText(StudentHome.this, "start"+startTime, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(StudentHome.this, "End"+endTime, Toast.LENGTH_SHORT).show();
+                            isValid = isCurrentTimeBetween(startTime, endTime);
+                            Toast.makeText(StudentHome.this, ""+isValid, Toast.LENGTH_SHORT).show();
+//                            if (isCurrentTimeBetween(startTime, endTime)) {
+                                // Enable button for marking attendance
+                                btnMarkAttendance.setVisibility(View.VISIBLE);
+                                btnMarkAttendance.setEnabled(true);
+                                btnMarkAttendance.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        // Get the code entered in the EditText
+                                        String attendanceCode = etCode.getText().toString().trim();
 
+                                        // Check if the code is not empty
+                                        if (!attendanceCode.isEmpty()) {
+                                            String currdate = getCurrentDate("ddMMyyyy");
+                                            checkLocationAndMarkAttendance();
+//                    checkAttendanceCode(attendanceCode, currdate);
+                                            // Show a Toast with the attendance code
+                                            Toast.makeText(StudentHome.this, "Attendance Code: " + attendanceCode, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            // Show a Toast if the code is empty
+                                            Toast.makeText(StudentHome.this, "Please enter the attendance code", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+
+//                            } else {
+//                                // Disable button for marking attendance
+//                                btnMarkAttendance.setVisibility(View.INVISIBLE);
+//                                btnMarkAttendance.setEnabled(false);
+//                            }
+
+
+                        }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle errors
+                        Toast.makeText(StudentHome.this, "Error retrieving time data", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+    public interface TimeValidationCallback {
+        void onValidationResult(boolean isValid);
+    }
     private void checkLocationAndMarkAttendance () {
         // Replace these values with the admin's set location
 //        double adminLatitude = 17.04625024791985; // Admin's latitude
@@ -268,4 +328,30 @@ public class StudentHome extends AppCompatActivity {
         startActivity(intent);
         finish(); // Optional: finish the current activity
     }
+    private boolean isCurrentTimeBetween(String startTime, String endTime) {
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
+        try {
+            // Get current date to set it with the parsed time
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+
+            Date startDate = dateFormat.parse(startTime);
+            Date endDate = dateFormat.parse(endTime);
+            Date currentTime = calendar.getTime(); // Current time is set to 00:00 AM
+
+            // Adjust current date to the time to compare
+            calendar.setTime(currentTime);
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR));
+            calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+
+            // Check if current time is between start time and end time
+            return currentTime.after(startDate) && currentTime.before(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }
